@@ -11,3 +11,9 @@
   - concurrent
 
 **password_checker:**
+ - example check password test
+
+**test_react_components:**
+- unit test react component
+- fireEvent vs user event
+- test async function
