@@ -1,81 +1,36 @@
-import { StringUtils, toUpperCase } from "../app/Utils";
+import { StringUtils } from "../app/Utils";
 
-describe ('Utils test', () => {
+describe('StringUtils', () => {
+    const stringUtils = new StringUtils();
 
-    // Test a class method
-    describe('StringUtils tests', ()=>{
-        test('should return uppercase', () => {
-            const sut = new StringUtils();
-            const actual = sut.toUpperCase('hello');
-            expect(actual).toBe('HELLO');
-        });   
+    // only: 이 테스트만 실행
+    it.only('should convert a string to uppercase', () => {
+        const input = 'hello';
+        const result = stringUtils.toUpperCase(input);
+        expect(result).toBe('HELLO');
     });
 
+    // skip: 이 테스트는 실행하지 않음. null argument에 대한 오류를 throw하는 테스트는 건너뜁니다.
+    it.skip('should throw an error for empty argument', () => {
+        expect(() => {
+            stringUtils.toUpperCase('');
+        }).toThrow('Argument Error');
+    });
 
-    // Test a function
-    test('should return uppercase', () => {
-        const result = toUpperCase('hello');
-        expect(result).toBe('HELLO');
-    });   
-     
+    // todo: 이 테스트는 아직 작성되지 않았음, 나중에 구현할 것임
+    it.todo('should convert a string to uppercase for undefined input'); // Placeholder for future test case
 
-    // Table driven test: run the test for each input
-    describe('ToUpperCase examples', ()=>{
-        it.each([
-            {input:'abc', expected: 'ABC'},
-            {input:'My-String', expected: 'MY-STRING'},
-            {input:'def', expected: 'DEF'}
-        ])('$input toUpperCase should be $expected', ({input, expected})=>{
-            const actual = toUpperCase(input);
-            expect(actual).toBe(expected);
+    // concurrent: 여러 테스트를 동시에 실행
+    it.concurrent('should handle multiple concurrent calls', async () => {
+        const inputs = ['test', 'string', 'utils'];
+        const promises = inputs.map(input => {
+            return Promise.resolve(stringUtils.toUpperCase(input));
         });
-    })
-
-
-    //Test a hook
-    describe('StringUtils tests', () => {
-        let sut: StringUtils;
-        beforeAll(()=>{
-            console.log('Before all'); // connect to database, etc.
-        });
-        beforeEach(()=>{
-            sut = new StringUtils();
-        });
-        afterEach(()=>{
-            console.log('Cleaning up');
-        });
-    
-        it('should return uppercase', () => {
-            const actual = sut.toUpperCase('hello');
-            expect(actual).toBe('HELLO');
-        });
-
-        // Test a method that throws an error(3 methods)
-        it('should throw error on invalid argument - using function', () => {
-            function expectError(){
-                sut.toUpperCase('');
-            }
-            expect(expectError).toThrowError();
-            expect(expectError).toThrowError('Argument Error');
-        });
-
-        it('should throw error on invalid argument - using arrow function', () => {
-            expect(() => {
-                sut.toUpperCase('');
-            }).toThrowError();
-        });
-
-        it('should throw error on invalid argument - using try-catch block', async () => {
-            try {
-                sut.toUpperCase('');
-            }
-            catch (error) {
-                expect(error).toBeInstanceOf(Error);
-                expect(error).toHaveProperty('message', 'Argument Error');
-            }
-        });
-
-
-    })
-    
+        const results = await Promise.all(promises);
+        expect(results).toEqual(['TEST', 'STRING', 'UTILS']);
+    });
 });
+
+
+
+
